@@ -1,0 +1,54 @@
+version: '3.7'
+
+services:
+  civitatis-backend-sql:
+      image: mcr.microsoft.com/mssql/server:2019-CU3-ubuntu-18.04
+      user: '0:0'
+      container_name: "${COMPOSE_PROJECT_NAME_DB}"
+      hostname: "${COMPOSE_PROJECT_NAME_DB}"
+      ports:
+        - 127.0.0.1:${SQL_PORT1_TO_1433}:1433
+        - 0.0.0.0:${SQL_PORT2_TO_1434}:1434
+      networks:
+        - proxynet
+      environment:
+        ACCEPT_EULA: Y
+        SA_PASSWORD: PasswordO1.
+        MSSQL_PID: Express
+      volumes:
+        - volumencode:/var/opt/mssql
+  civitatis-backend-app:
+      build:
+        context: .
+        args:
+          UID: ${UID:-0}
+          GID: ${GID:-0}
+          UNAME: ${UNAME:-cvrt}
+      links:
+        - "civitatis-backend-sql:db"
+      container_name: "${COMPOSE_PROJECT_NAME_APP}"
+      hostname: "${COMPOSE_PROJECT_NAME_APP}"
+      restart: unless-stopped
+      volumes:
+        - ../src:/var/www/html
+      env_file:
+        - ./.env_app
+      ports:
+        - ${APP_PORT1_TO_80}:80
+        - ${APP_PORT2_TO_8080}:8080
+      networks:
+        - proxynet
+      depends_on:
+        - civitatis-backend-sql
+
+
+volumes:
+  volumencode:
+    name: ${COMPOSE_PROJECT_NAME_DB}-data
+    external: false
+
+networks:
+  proxynet:
+    name: shared_bridge
+    driver: bridge
+    
