@@ -3,7 +3,7 @@ Este proyecto hace uso de docker para desplegar los siguientes contenedores:
 
 |  Container | Specific Stuff | Use |
 | :---------:| :--: |:--: |
-| container-backend-app | Php 7.4, Node.js v14, Nginx | Despliegue de ApiRest con Symfony5.3 y SPA con Vue3  |
+| container-backend-app | Php 7.4, Node.js v14, Nginx | Despliegue de ApiRest con Symfony5.3 & ApiPlatform y SPA con Vue3  |
 | container-backend-mysql | Mysql 5.7 | base de datos |
 
  
