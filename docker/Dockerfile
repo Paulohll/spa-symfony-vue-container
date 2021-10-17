@@ -54,17 +54,6 @@ RUN apt-get install -y \
     php7.4-xml \
     php7.4-bcmath
 
-# Install driver PHP SQL
-# RUN   apt install php-pear -y
-# RUN   apt-get install php7.4-dev -y
-# RUN   apt install unixodbc-dev -y
-# RUN pecl install sqlsrv
-# RUN pecl install pdo_sqlsrv
-# RUN  printf "; priority=20\nextension=sqlsrv.so\n" > /etc/php/7.4/mods-available/sqlsrv.ini 
-# RUN  printf "; priority=30\nextension=pdo_sqlsrv.so\n" > /etc/php/7.4/mods-available/pdo_sqlsrv.ini 
-
-# RUN phpenmod v 7.4 sqlsrv pdo_sqlsrv
-
 
 
 # Install NPM and Node.js

@@ -7,9 +7,8 @@
           <div class="form-inline">
             <div class="form-group">
               <select v-model="operacion">
-                <option disabled value="">Seleccione un elemento</option>
-                <option>Alquiler</option>
-                <option>Compra</option>
+                <option value="A">Alquiler</option>
+                <option value="C">Compra</option>
               </select>
             </div>
           </div>
@@ -17,7 +16,7 @@
       </div>
     </div>
     <div class="form-row mt-3">
-      <div class="col-12 text-center">
+      <div class="col-12 text-center mt-3">
         <button @click="this.getData()" class="btn btn-success">Buscar</button>
       </div>
     </div>
@@ -42,8 +41,8 @@
             <p class="card-text">{{ row.description }}</p>
             <div class="card-footer">
               <small class="text-muted">{{ row.owner }}</small>
-              <small class="text-muted ml-3">{{ row.location }}</small>
-              <small class="text-muted ml-3">Alquiler</small>
+              <small class="text-info ml-3">{{ row.location }}</small>
+              <small class="text-muted ml-3">{{ (row.type=='A')? 'Alquiler':'Compra' }}</small>
             </div>
           </div>
         </div>
@@ -69,8 +68,7 @@ export default {
   },
   data() {
     return {
-      operacion: '',
-      numPeople: 1,
+      operacion: 'C',
       loadingData: false,
       data: {}
     }
@@ -80,13 +78,11 @@ export default {
       this.loadingData = true
       this.axios
         .get(this.url + '/api/viviendas', {
-          // params: {
-          //   dateStart: this.formatDate(this.datepickedIni),
-          //   num: this.numPeople
-          // },
+          params: {
+            type: this.operacion,
+          },
           // headers: { Authorization: this.token }
-        })
-        .then((response) => {
+        }).then((response) => {
           console.log(response.data['hydra:member'])
           this.data = response.data['hydra:member']
         })
@@ -95,59 +91,11 @@ export default {
         })
         .finally(() => (this.loadingData = false))
     },
-    formatDate(date) {
-      var d = new Date(date),
-        month = '' + (d.getMonth() + 1),
-        day = '' + d.getDate(),
-        year = d.getFullYear()
-
-      if (month.length < 2) month = '0' + month
-      if (day.length < 2) day = '0' + day
-
-      return [year, month, day].join('-')
-    },
     validateData(data) {
       return Object.keys(data).length
-    },
-    buyActivity(id) {
-      this.loadingData = true
-      this.axios
-        .post(
-          this.url + '/api/bookings',
-          {
-            dateBooking: this.formatDate(this.datepickedIni),
-            num: this.numPeople,
-            id: id
-          },
-          { headers: { Authorization: this.token } }
-        )
-        .then((response) => {
-          if (this.validateData(response.data.data) > 0) {
-            this.loadingData = false
-            this.$notify({
-              type: 'success',
-              title: 'Exito',
-              text: 'Acabas de reservar ' + response.data.data.activity.title,
-              position: 'top center'
-            })
-          }
-        })
-        .catch((error) => {
-          this.$notify({
-            type: 'error',
-            title: 'Error',
-            text: 'Algo paso no salio bien',
-            position: 'top center'
-          })
-        })
-        .finally(() => (this.loadingData = false))
     }
   }
-  // created() {
-  //   this.axios.get(this.url + '/api/activities', { headers: { Authorization: this.token } }).then((response) => {
-  //     console.log(this.url)
-  //   })
-  // }
+ 
 }
 </script>
 

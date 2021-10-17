@@ -6,12 +6,15 @@ use App\Repository\ViviendaRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use DateTime;
 use DateTimeInterface;
 /**
  * @ORM\Entity(repositoryClass=ViviendaRepository::class)
  * @ORM\Table(name="viviendas")
  * @ApiResource()
+ * @ApiFilter(SearchFilter::class, properties={"type": "exact"})
  */
 class Vivienda
 {
@@ -58,6 +61,12 @@ class Vivienda
      * @Assert\NotBlank()
      */
     private $value;
+
+    /**
+     * @ORM\Column(type="string",length=1)
+     * @Assert\NotBlank()
+     */
+    private $type;
 
     /**
      * @ORM\Column(type="datetime",nullable=true)
@@ -120,6 +129,17 @@ class Vivienda
         return $this;
     }
 
+    public function gettype(): ?string
+    {
+        return $this->type;
+    }
+
+    public function settype(string $type): self
+    {
+        $this->type = $type;  
+
+        return $this;
+    }
     public function getLocation(): ?string
     {
         return $this->location;
