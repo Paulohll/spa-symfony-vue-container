@@ -1,10 +1,11 @@
-# INTRODUCCIÓN
+#  spa-symfony-vue-container
 Este proyecto hace uso de docker para desplegar los siguientes contenedores:
 
 |  Container | Specific Stuff | Use |
 | :---------:| :--: |:--: |
 | container-backend-app | Php 7.4, Node.js v14, Nginx | Despliegue de ApiRest con Symfony5.3 y SPA con Vue3  |
 | container-backend-mysql | Mysql 5.7 | base de datos |
+
  
 ## Instalación 🔧
 * Es necesario tener instalado [Docker](https://docs.docker.com/engine/install/) y [Composer](https://docs.docker.com/compose/install/)  en tu equipo así como una  conexión a Internet
@@ -38,5 +39,4 @@ Este proyecto hace uso de docker para desplegar los siguientes contenedores:
 * Name: **Paulo Horna**
 * Email: **paulo.ahll@gmail.com**
 
-# spa-symfony-vue-container
 
