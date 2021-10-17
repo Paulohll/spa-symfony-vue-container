@@ -11,7 +11,7 @@ module.exports = {
   },
   chainWebpack: (config) => {
     config.plugin('html').tap((args) => {
-      args[0].title = 'Civitatis'
+      args[0].title = 'Haya RS'
       args[0].meta = { description: 'SPA using Vue.js 3' }
       return args
     })
@@ -20,10 +20,10 @@ module.exports = {
     proxy: {
       '^/api': {
         target: 'http://localhost:80',
-        changeOrigin: true,
-        pathRewrite: {
-          '^/api': ''
-        },
+        changeOrigin: true
+        // pathRewrite: {
+        //   '^/api': ''
+        // },
       },
     }
    }

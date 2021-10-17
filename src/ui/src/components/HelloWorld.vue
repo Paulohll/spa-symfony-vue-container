@@ -1,46 +1,50 @@
 <template>
   <div>
-    <div class="form-row">
-      <div class="col-6">
-        <datepicker class="form-control" v-model="this.datepickedIni" type="date" />
+    <div class="form-row mt-3">
+      <div class="form-inline offset-md-4">
+        <label for="operacion" class="col-xs-2 control-label">Tipo de Operación</label>
+        <div class="col-xs-10 ml-2">
+          <div class="form-inline">
+            <div class="form-group">
+              <select v-model="operacion">
+                <option disabled value="">Seleccione un elemento</option>
+                <option>Alquiler</option>
+                <option>Compra</option>
+              </select>
+            </div>
+          </div>
+        </div>
       </div>
-      <!-- <div class="col-4">
-      <datepicker class="form-control" v-model="this.datepickedEnd" type="date" />
-    </div> -->
-      <div class="col-3">
-        <input
-          type="number"
-          id="form1"
-          class="form-control"
-          placeholder="Buscador"
-          aria-label="Search"
-          v-model="this.numPeople"
-        />
-      </div>
-      <div class="col-3 text-center">
+    </div>
+    <div class="form-row mt-3">
+      <div class="col-12 text-center">
         <button @click="this.getData()" class="btn btn-success">Buscar</button>
       </div>
     </div>
-    <div class="row mt-5 mb-5 col-12">
+    <div class="row mt-5 mb-5 ml-1">
       <div class="row justify-content-md-center col-12 text-center" v-if="loadingData">
         <div class="col-auto text-center">
           <!-- <bounce-loader :loadingRegisterRegister="loadingRegister" :color="'#ffc400'"></bounce-loader> -->
-          <moon-loader :loadingData="loadingData" :color="'#F70759'"></moon-loader>
+          <moon-loader :loadingData="loadingData" :color="'#0A93D5'"></moon-loader>
         </div>
       </div>
       <div class="col-12" v-else-if="!loadingData">
-        <div v-if="this.validateData(this.data) == 0" class="w-50 text-center col-md-6 offset-md-3">
-          <div class="alert alert-warning" role="alert">No se encontro actividades para la fecha seleccionada</div>
+        <div v-if="this.validateData(this.data) == 0" class="w-50 text-center offset-md-3">
+          <div class="alert alert-warning" role="alert">Ejecute la búsqueda para visualizar viviendas.</div>
         </div>
 
-        <div v-else class="card w-50 text-center col-md-8 offset-md-2">
+        <div v-else class="card text-center">
           <div class="card-body" v-for="(row, id) in data" :key="id">
             <h5 class="card-title">
-              {{ row.title }}
-              <p class="card-text pull-right" style="float: right">{{ row.pu }}</p>
+              {{ row.shortdescription }}
+              <p class="card-text pull-right" style="float: right">{{ row.value }}</p>
             </h5>
             <p class="card-text">{{ row.description }}</p>
-            <a @click="this.buyActivity(row.id)" class="btn btn-warning">Comprar</a>
+            <div class="card-footer">
+              <small class="text-muted">{{ row.owner }}</small>
+              <small class="text-muted ml-3">{{ row.location }}</small>
+              <small class="text-muted ml-3">Alquiler</small>
+            </div>
           </div>
         </div>
       </div>
@@ -65,7 +69,7 @@ export default {
   },
   data() {
     return {
-      datepickedIni: new Date(),
+      operacion: '',
       numPeople: 1,
       loadingData: false,
       data: {}
@@ -75,16 +79,16 @@ export default {
     getData() {
       this.loadingData = true
       this.axios
-        .get(this.url + '/api/activities', {
-          params: {
-            dateStart: this.formatDate(this.datepickedIni),
-            num: this.numPeople
-          },
-          headers: { Authorization: this.token }
+        .get(this.url + '/api/viviendas', {
+          // params: {
+          //   dateStart: this.formatDate(this.datepickedIni),
+          //   num: this.numPeople
+          // },
+          // headers: { Authorization: this.token }
         })
         .then((response) => {
-          console.log(Object.keys(response.data.data).length)
-          this.data = response.data.data
+          console.log(response.data['hydra:member'])
+          this.data = response.data['hydra:member']
         })
         .catch((error) => {
           console.log(error)
@@ -119,11 +123,11 @@ export default {
         )
         .then((response) => {
           if (this.validateData(response.data.data) > 0) {
-            this.loadingData=false;
+            this.loadingData = false
             this.$notify({
               type: 'success',
               title: 'Exito',
-              text: 'Acabas de reservar '+response.data.data.activity.title,
+              text: 'Acabas de reservar ' + response.data.data.activity.title,
               position: 'top center'
             })
           }
@@ -133,7 +137,7 @@ export default {
             type: 'error',
             title: 'Error',
             text: 'Algo paso no salio bien',
-             position: 'top center'
+            position: 'top center'
           })
         })
         .finally(() => (this.loadingData = false))

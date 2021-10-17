@@ -1,7 +1,7 @@
 <template>
   <nav class="navbar navbar-expand-md navbar-dark bg-civitatis fixed-top">
-    <div class="container">
-      <router-link to="/" class="navbar-brand" @click="collapseNavbar">Civitatis</router-link>
+    <div class="container-fluid">
+      <router-link to="/" class="navbar-brand" @click="collapseNavbar"><img alt="Logotipo Haya Inmobiliaria" src="https://www.haya.es/static/img/brand-haya.svg" width="30" height="30" class="d-inline-block align-text-top">HAYA RS</router-link>
       <button
         :class="['navbar-toggler', !navbarExpanded && 'collapsed']"
         type="button"
@@ -46,6 +46,6 @@ export default {
 </script>
 <style scoped>
 .bg-civitatis {
-    background-color: #F70759 !important;
+    background-color: #0A93D5 !important;
 }
 </style>
