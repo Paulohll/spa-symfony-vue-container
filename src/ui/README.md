@@ -1,7 +1,4 @@
-# vue3-starter-template
-A single page app starter template created to easily bootstrap Vue.js 3 apps.
-
-**Features**
+# includes
 - Vuex 4 for state management
 - Vue Router 4 for client-side routing
 - Bootstrap 4.6 for layout and styling
@@ -38,6 +35,3 @@ npm run test:unit
 ```
 npm run lint
 ```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
