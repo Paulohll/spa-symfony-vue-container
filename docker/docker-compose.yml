@@ -1,23 +1,30 @@
 version: '3.7'
 
 services:
-  civitatis-backend-sql:
-      image: mcr.microsoft.com/mssql/server:2019-CU3-ubuntu-18.04
-      user: '0:0'
+  container-backend-mysql:
+      image: mysql:5.7
       container_name: "${COMPOSE_PROJECT_NAME_DB}"
       hostname: "${COMPOSE_PROJECT_NAME_DB}"
+      environment:
+        - MYSQL_ROOT_PASSWORD_FILE=/run/secrets/db_root_password
+        - MYSQL_DATABASE=${MYSQL_DATABASE}
+        - MYSQL_USER=${MYSQL_USER}
+        - MYSQL_PASSWORD_FILE=/run/secrets/db_password
+      restart: unless-stopped
       ports:
-        - 127.0.0.1:${SQL_PORT1_TO_1433}:1433
-        - 0.0.0.0:${SQL_PORT2_TO_1434}:1434
+        - 127.0.0.1:${MYSQL_PORT1_TO_3306}:3306
+        - 0.0.0.0:${MYSQL_PORT2_TO_3306}:3306
+      volumes:
+        - volumencode:/var/lib/mysql
+      env_file:
+        - ./.env_database
+      secrets:
+        - db_root_password
+        - db_password
       networks:
         - proxynet
-      environment:
-        ACCEPT_EULA: Y
-        SA_PASSWORD: PasswordO1.
-        MSSQL_PID: Express
-      volumes:
-        - volumencode:/var/opt/mssql
-  civitatis-backend-app:
+
+  container-backend-app:
       build:
         context: .
         args:
@@ -25,7 +32,7 @@ services:
           GID: ${GID:-0}
           UNAME: ${UNAME:-cvrt}
       links:
-        - "civitatis-backend-sql:db"
+        - "container-backend-mysql:db"
       container_name: "${COMPOSE_PROJECT_NAME_APP}"
       hostname: "${COMPOSE_PROJECT_NAME_APP}"
       restart: unless-stopped
@@ -39,9 +46,14 @@ services:
       networks:
         - proxynet
       depends_on:
-        - civitatis-backend-sql
+        - container-backend-mysql
 
-
+secrets:
+  db_root_password:
+    file: db_root_password.txt
+  db_password:
+    file: db_password.txt
+    
 volumes:
   volumencode:
     name: ${COMPOSE_PROJECT_NAME_DB}-data
